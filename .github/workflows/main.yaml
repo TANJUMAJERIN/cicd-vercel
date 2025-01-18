@@ -1,16 +1,13 @@
-name: Node.js CI/CD with Vercel
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  test-and-deploy:
-    runs-on: ubuntu-latest
+  build-and-test:
+    runs-on: windows-latest
 
     steps:
       # Checkout the repository
@@ -21,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: 16
 
       # Install dependencies
       - name: Install dependencies
@@ -30,10 +27,32 @@ jobs:
       # Run tests
       - name: Run tests
         run: npm test
+        continue-on-error: false  # Ensure the workflow will stop if tests fail
 
-      # Deploy if tests pass
+  deploy:
+    runs-on: windows-latest
+    needs: build-and-test  # Ensure that the deployment only runs after 'build-and-test' job
+    if: success()  # Ensure deployment only runs if tests pass
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Deploy to Vercel
       - name: Deploy to Vercel
-        if: success()
-        run: |
-          npm install -g vercel
-          vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: "--prod --yes"
+          working-directory: ./
