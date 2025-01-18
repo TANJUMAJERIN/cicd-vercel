@@ -2,11 +2,12 @@
 const express = require('express');
 const app = express();
 //const PORT = 3000;
-if (process.env.NODE_ENV !== 'test') {
+
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});}
+  res.send('Hello World!');
+});
 module.exports = app; 
+
 // let server;
 
 // if (process.env.NODE_ENV == 'test') {

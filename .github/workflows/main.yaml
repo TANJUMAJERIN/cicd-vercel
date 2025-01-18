@@ -28,12 +28,11 @@ jobs:
       - name: Run tests
         run: npm test
 
-      # Deploy to Vercel
+      # Deploy to Vercel (only if tests pass)
       - name: Deploy to Vercel
+        if: success()  # Only run this step if previous steps (tests) succeeded
         uses: amondnet/vercel-action@v20
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-args: "--prod --yes"
           working-directory: ./
-         
-        
