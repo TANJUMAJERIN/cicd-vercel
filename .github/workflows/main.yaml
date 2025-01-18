@@ -6,8 +6,9 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  # Job 1: Run tests
+  test:
+    runs-on: windows-latest  # Change to Windows runner
 
     steps:
       # Checkout the repository
@@ -28,9 +29,28 @@ jobs:
       - name: Run tests
         run: npm test
 
+  # Job 2: Deploy to Vercel (Only runs if tests pass)
+  deploy:
+    runs-on: windows-latest  # Change to Windows runner
+    needs: test  # Ensure that the deploy job runs only after the test job passes
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
       # Deploy to Vercel (only if tests pass)
       - name: Deploy to Vercel
-        if: success()  # Only run this step if previous steps (tests) succeeded
         uses: amondnet/vercel-action@v20
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
