@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  # Job 1: Run tests
-  test:
-    runs-on: windows-latest  # Change to Windows runner
+  build-and-test:
+    runs-on: windows-latest
 
     steps:
       # Checkout the repository
@@ -28,11 +27,12 @@ jobs:
       # Run tests
       - name: Run tests
         run: npm test
+        continue-on-error: false  # Ensure that the pipeline fails if tests fail
 
-  # Job 2: Deploy to Vercel (Only runs if tests pass)
   deploy:
-    runs-on: windows-latest  # Change to Windows runner
-    needs: test  # Ensure that the deploy job runs only after the test job passes
+    runs-on: windows-latest
+    needs: build-and-test  # Ensure that this job runs only after the 'build-and-test' job
+    if: success()  # Ensures this job only runs if 'build-and-test' job succeeds
 
     steps:
       # Checkout the repository
@@ -49,7 +49,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Deploy to Vercel (only if tests pass)
+      # Deploy to Vercel
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
         with:
