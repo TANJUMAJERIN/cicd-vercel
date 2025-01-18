@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest",
-    "build": "[my-framework] build --output public"
+    "build": "hello build --output public"
   },
   "keywords": [],
   "author": "",
