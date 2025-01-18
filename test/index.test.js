@@ -21,10 +21,10 @@ describe('GET /', () => {
 });
 
 // Close the server after the tests
-afterAll(done => {
-  if (server) {
-    server.close(done); // Use the server instance to close
-  } else {
-    done(); // If no server, just call done
-  }
-});
+// afterAll(done => {
+//   if (server) {
+//     server.close(done); // Use the server instance to close
+//   } else {
+//     done(); // If no server, just call done
+//   }
+// });
