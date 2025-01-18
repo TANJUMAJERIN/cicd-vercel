@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 
 let server;
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV == 'test') {
   // Only start the server if not in test environment
   server = app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
