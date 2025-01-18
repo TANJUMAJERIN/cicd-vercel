@@ -15,7 +15,7 @@ const app = express();
 const PORT = 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hellooo World');
+  res.send('Hello World');
 });
 
 if (require.main === module) {
